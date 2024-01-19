@@ -74,6 +74,7 @@ void ALMADefaultCharacter::Tick(float DeltaTime)
 void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &ALMADefaultCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ALMADefaultCharacter::MoveRight);
 
@@ -97,5 +98,19 @@ void ALMADefaultCharacter::CameraMove(float Value)
 	// SpringArmComponent->TargetArmLength = 
 	//SpringArmComponent->TargetArmLength = value;
 	//AddMovementInput(SpringArmComponent->TargetArmLength, Value);
+
+	if (Value > 0 && h < MaxZoom)
+	{
+		h = h + ZoomSpeed; 
+	}
+	else if (Value < 0 && h > MinZoom)
+	{
+		h = h - ZoomSpeed;
+	}
+
+	//SpringArmComponent->TargetArmLength = h;
+
+	FVector NewCameraLocation = FVector(h, 0.f, 0.f);
+	SpringArmComponent->SetRelativeLocation(NewCameraLocation);
 }
 
