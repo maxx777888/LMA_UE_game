@@ -78,7 +78,7 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis("MoveForward", this, &ALMADefaultCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ALMADefaultCharacter::MoveRight);
 
-	PlayerInputComponent->BindAxis("CameraMove", this, &ALMADefaultCharacter::CameraMove);
+	PlayerInputComponent->BindAxis("CameraZoomInOut", this, &ALMADefaultCharacter::CameraZoomInOut);
 
 
 }
@@ -93,24 +93,18 @@ void ALMADefaultCharacter::MoveRight(float Value)
 	AddMovementInput(GetActorRightVector(), Value);
 } 
 
-void ALMADefaultCharacter::CameraMove(float Value) 
+void ALMADefaultCharacter::CameraZoomInOut(float Value)
 {
-	// SpringArmComponent->TargetArmLength = 
-	//SpringArmComponent->TargetArmLength = value;
-	//AddMovementInput(SpringArmComponent->TargetArmLength, Value);
 
-	if (Value > 0 && h < MaxZoom)
+	if (Value > 0 && newZoomF < MaxZoom)
 	{
-		h = h + ZoomSpeed; 
+		newZoomF = newZoomF + ZoomSpeed; 
 	}
-	else if (Value < 0 && h > MinZoom)
+	else if (Value < 0 && newZoomF > MinZoom)
 	{
-		h = h - ZoomSpeed;
+		newZoomF = newZoomF - ZoomSpeed;
 	}
+	SpringArmComponent->TargetArmLength = newZoomF;
 
-	//SpringArmComponent->TargetArmLength = h;
-
-	FVector NewCameraLocation = FVector(h, 0.f, 0.f);
-	SpringArmComponent->SetRelativeLocation(NewCameraLocation);
 }
 

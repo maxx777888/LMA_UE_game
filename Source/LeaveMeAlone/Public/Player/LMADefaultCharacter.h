@@ -33,17 +33,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cursor")
 	FVector CursorSize = FVector(20.0f, 40.0f, 40.0f);
 
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Zoom")
-	float MaxZoom = 2800.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Zoom")
-	float MinZoom = 500.f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera Zoom")
-	float ZoomSpeed = 10.f;
-
-
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -60,14 +49,17 @@ private:
 	float YRotation = -75.0f;
 	float ArmLength = 1400.0f;
 	float FOV = 55.0f;
-	float h = ArmLength;
+	
+	
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
-	//”правление камерой
-	void CameraMove(float value);
 
-	
-
+	//”правление приближением и удалением камеры от персонажа
+	void CameraZoomInOut(float value);
+	float ZoomSpeed = 50.f;
+	float MinZoom = 500.f;
+	float MaxZoom = 2800.f;
+	float newZoomF = ArmLength;
 
 };
