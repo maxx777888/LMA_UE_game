@@ -80,16 +80,18 @@ private:
 	// Настройки спринта
 	void SprintRun();
 	void SprintStop();
-	bool IsSprint;
-	float Stamina;
+	void DecreaseStamina();
+	void IncreaseStamina();
 
+	bool IsSprint;
 	const float MaxStamina = 100.f;
 	const float MinStamina = 0.f;
 
+	float Stamina = MaxStamina;
 	float WasteStamina = 0.50f;
 	float AccumulationStamina = 0.10f;
-	void DecreaseStamina();
-	void IncreaseStamina();
+
+	
 	
 
 };

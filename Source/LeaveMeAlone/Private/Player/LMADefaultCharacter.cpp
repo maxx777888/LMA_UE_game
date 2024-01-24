@@ -47,7 +47,6 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 void ALMADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	Stamina = MaxStamina;
 
 	if (CursorMaterial)
 	{
@@ -186,7 +185,7 @@ void ALMADefaultCharacter::DecreaseStamina()
 {
 	
 	Stamina = FMath::Clamp(Stamina - WasteStamina, MinStamina, MaxStamina);
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("Decrease Stamina = %f"), Stamina));
+	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::White, FString::Printf(TEXT("Decrease Stamina = %f"), Stamina));
 	
 }
 
@@ -195,7 +194,7 @@ void ALMADefaultCharacter::IncreaseStamina()
 	if (IsSprint == false)
 	{
 		Stamina = FMath::Clamp(Stamina + AccumulationStamina, MinStamina, MaxStamina);
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Increase Stamina = %f"), Stamina));	
+		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Increase Stamina = %f"), Stamina));	
 	}	
 }
 
