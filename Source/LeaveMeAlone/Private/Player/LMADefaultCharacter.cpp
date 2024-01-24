@@ -71,15 +71,15 @@ void ALMADefaultCharacter::Tick(float DeltaTime)
 		RotationPlayerOnCursor();//Метод для управления курсором мышки
 	}
 	//Настройки спринта и выносливости
-	if (IsSprint == true && MaxStamina > 0.f)
+	if (IsSprint == true && Stamina != MinStamina)
 	{
 		DecreaseStamina();
 	}
-	else if (IsSprint == false && MaxStamina < 100.f)
+	else if (IsSprint == false && Stamina != MaxStamina)
 	{
 		IncreaseStamina();
 	}
-	if (FMath::IsNearlyZero(MaxStamina))
+	if (FMath::IsNearlyZero(Stamina))
 	{
 		SprintStop();
 	}
@@ -97,7 +97,7 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis("CameraZoomInOut", this, &ALMADefaultCharacter::CameraZoomInOut);
 
 	PlayerInputComponent->BindAction("SprintRun", IE_Pressed, this, &ALMADefaultCharacter::SprintRun);
-	PlayerInputComponent->BindAction("SprintRun", IE_Pressed, this, &ALMADefaultCharacter::SprintStop);
+	PlayerInputComponent->BindAction("SprintRun", IE_Released, this, &ALMADefaultCharacter::SprintStop);
 
 
 }
@@ -168,7 +168,7 @@ void ALMADefaultCharacter::SprintRun()
 	IsSprint = true;
 	GetCharacterMovement()->MaxWalkSpeed = 700.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
-	if (MaxStamina > 0)
+	if (Stamina > MinStamina)
 	{
 		DecreaseStamina();
 	}
@@ -184,16 +184,29 @@ void ALMADefaultCharacter::SprintStop()
 
 void ALMADefaultCharacter::DecreaseStamina() 
 {
-	MaxStamina = MaxStamina - WasteStamina;
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("Stamina = %f"), MaxStamina));
+	
+		Stamina = Stamina - WasteStamina;
+		if (Stamina < MinStamina)
+		{
+			Stamina = MinStamina;
+		}
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("Stamina = %f"), MaxStamina));
+	
 }
 
 void ALMADefaultCharacter::IncreaseStamina() 
 {
 	if (IsSprint == false)
 	{
-		MaxStamina = MaxStamina + AccumulationStamina;
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Stamina = %f"), MaxStamina));
+		if (Stamina < MaxStamina)
+		{
+			Stamina = Stamina + AccumulationStamina;
+			if (Stamina > MaxStamina)
+			{
+				Stamina = MaxStamina;
+			}
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Stamina = %f"), MaxStamina));
+		}	
 	}	
 }
 
