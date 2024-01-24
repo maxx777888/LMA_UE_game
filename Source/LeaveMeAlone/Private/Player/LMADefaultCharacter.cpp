@@ -47,6 +47,7 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 void ALMADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	Stamina = MaxStamina;
 
 	if (CursorMaterial)
 	{
@@ -70,6 +71,7 @@ void ALMADefaultCharacter::Tick(float DeltaTime)
 	{
 		RotationPlayerOnCursor();//Метод для управления курсором мышки
 	}
+
 	//Настройки спринта и выносливости
 	if (IsSprint == true && Stamina != MinStamina)
 	{
@@ -168,10 +170,8 @@ void ALMADefaultCharacter::SprintRun()
 	IsSprint = true;
 	GetCharacterMovement()->MaxWalkSpeed = 700.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
-	if (Stamina > MinStamina)
-	{
-		DecreaseStamina();
-	}
+	DecreaseStamina();
+	
 }
 
 void ALMADefaultCharacter::SprintStop() 
@@ -185,12 +185,8 @@ void ALMADefaultCharacter::SprintStop()
 void ALMADefaultCharacter::DecreaseStamina() 
 {
 	
-		Stamina = Stamina - WasteStamina;
-		if (Stamina < MinStamina)
-		{
-			Stamina = MinStamina;
-		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("Stamina = %f"), MaxStamina));
+	Stamina = FMath::Clamp(Stamina - WasteStamina, MinStamina, MaxStamina);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::White, FString::Printf(TEXT("Decrease Stamina = %f"), Stamina));
 	
 }
 
@@ -198,15 +194,8 @@ void ALMADefaultCharacter::IncreaseStamina()
 {
 	if (IsSprint == false)
 	{
-		if (Stamina < MaxStamina)
-		{
-			Stamina = Stamina + AccumulationStamina;
-			if (Stamina > MaxStamina)
-			{
-				Stamina = MaxStamina;
-			}
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Stamina = %f"), MaxStamina));
-		}	
+		Stamina = FMath::Clamp(Stamina + AccumulationStamina, MinStamina, MaxStamina);
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Increase Stamina = %f"), Stamina));	
 	}	
 }
 

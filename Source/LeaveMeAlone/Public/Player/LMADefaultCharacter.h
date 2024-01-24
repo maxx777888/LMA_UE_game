@@ -81,7 +81,7 @@ private:
 	void SprintRun();
 	void SprintStop();
 	bool IsSprint;
-	float Stamina = MaxStamina;
+	float Stamina;
 
 	const float MaxStamina = 100.f;
 	const float MinStamina = 0.f;
