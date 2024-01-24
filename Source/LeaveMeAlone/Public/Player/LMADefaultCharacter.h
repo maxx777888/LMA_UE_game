@@ -7,6 +7,8 @@
 #include "LMADefaultCharacter.generated.h"
 class UCameraComponent;
 class USpringArmComponent;
+class ULMAHealthComponent;
+class UAnimMontage;
 
 UCLASS()
 class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
@@ -16,6 +18,8 @@ class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ALMADefaultCharacter();
+	UFUNCTION()
+	ULMAHealthComponent* GetHealthComponent() const { return HealthComponent; } //Геттер для получения компонента здоровья
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
@@ -32,6 +36,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Cursor")
 	FVector CursorSize = FVector(20.0f, 40.0f, 40.0f);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components|Health")
+	ULMAHealthComponent* HealthComponent; //Компонент здоровья 
+
+	UPROPERTY(EditDefaultsOnly, Category = "Animation")
+	UAnimMontage* DeathMontage;//Указатель на переменную анимации смерти
+
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,7 +61,10 @@ private:
 	float ArmLength = 1400.0f;
 	float FOV = 55.0f;
 	
-	
+	void OnDeath();//Функция, реагирует на сообщение от делегата о смерти персонажа
+	void OnHealthChanged(float NewHealth);//Функция срабатывает если произошли изменения в состоянии здоровья персонажа
+
+	void RotationPlayerOnCursor();//Метод управления курсором мышки для поворотов персонажа
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
@@ -61,5 +75,17 @@ private:
 	float MinZoom = 500.f;
 	float MaxZoom = 2800.f;
 	float newZoomF = ArmLength;
+
+	
+	// Настройки спринта
+	void SprintRun();
+	void SprintStop();
+	bool IsSprint;
+	float MaxStamina = 100.0f;
+	float WasteStamina = 2.0f;
+	float AccumulationStamina = 1.0f;
+	void DecreaseStamina();
+	void IncreaseStamina();
+	
 
 };
