@@ -9,7 +9,7 @@ class UCameraComponent;
 class USpringArmComponent;
 class ULMAHealthComponent;
 class UAnimMontage;
-
+class ULMAWeaponComponent;
 UCLASS()
 class LEAVEMEALONE_API ALMADefaultCharacter : public ACharacter
 {
@@ -43,6 +43,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
 	UAnimMontage* DeathMontage;//Указатель на переменную анимации смерти
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	ULMAWeaponComponent* WeaponComponent;//Компонент оружия
+
+
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -54,7 +58,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
+	UPROPERTY(BlueprintReadOnly)
+	bool IsSprint;//Переменная для сохранения состояния спринта
 
 private:
 	float YRotation = -75.0f;
@@ -83,7 +88,7 @@ private:
 	void DecreaseStamina();
 	void IncreaseStamina();
 
-	bool IsSprint;
+	
 	const float MaxStamina = 100.f;
 	const float MinStamina = 0.f;
 

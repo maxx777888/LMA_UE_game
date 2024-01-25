@@ -10,6 +10,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/LMAHealthComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/LMAWeaponComponent.h"
 #include "Engine/Engine.h"
 
 // Sets default values
@@ -39,8 +40,8 @@ ALMADefaultCharacter::ALMADefaultCharacter()
 
 	//Определяем персонажу компонент здоровья
 	HealthComponent = CreateDefaultSubobject<ULMAHealthComponent>("HealthComponent");
-
-
+	//Определяем персонажу компонент оружия
+	WeaponComponent = CreateDefaultSubobject<ULMAWeaponComponent>("Weapon");
 }
 
 // Called when the game starts or when spawned
@@ -169,7 +170,7 @@ void ALMADefaultCharacter::SprintRun()
 	IsSprint = true;
 	GetCharacterMovement()->MaxWalkSpeed = 700.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
-	DecreaseStamina();
+	/*DecreaseStamina();*/
 	
 }
 
@@ -178,7 +179,7 @@ void ALMADefaultCharacter::SprintStop()
 	IsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300.0f;
-	IncreaseStamina();
+	/*IncreaseStamina();*/
 }
 
 void ALMADefaultCharacter::DecreaseStamina() 
