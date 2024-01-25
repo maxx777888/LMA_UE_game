@@ -170,7 +170,6 @@ void ALMADefaultCharacter::SprintRun()
 	IsSprint = true;
 	GetCharacterMovement()->MaxWalkSpeed = 700.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
-	/*DecreaseStamina();*/
 	
 }
 
@@ -179,7 +178,6 @@ void ALMADefaultCharacter::SprintStop()
 	IsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300.0f;
-	/*IncreaseStamina();*/
 }
 
 void ALMADefaultCharacter::DecreaseStamina() 
