@@ -4,6 +4,8 @@
 #include "Weapon/LMABaseWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All);//лог будет отображать количество боеприпасов
+
 // Sets default values
 ALMABaseWeapon::ALMABaseWeapon()
 {
@@ -15,11 +17,61 @@ ALMABaseWeapon::ALMABaseWeapon()
 
 }
 
+void ALMABaseWeapon::Fire() 
+{
+	Shoot();
+	
+}
+
+void ALMABaseWeapon::ChangeClip() 
+{
+	CurrentAmmoWeapon.Bullets = AmmoWeapon.Bullets;
+}
+
 // Called when the game starts or when spawned
 void ALMABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+}
+
+void ALMABaseWeapon::Shoot() 
+{
+	const FTransform SocketTransform = WeaponComponent->GetSocketTransform("Muzzle");//Получили расположение сокета дула
+	const FVector TraceStart = SocketTransform.GetLocation();//Задали изначальную точку трассировки
+	//Получили направление стрельбы, в данном случае это координата X нашего сокета
+	const FVector ShootDirection = SocketTransform.GetRotation().GetForwardVector();
+	const FVector TraceEnd = TraceStart + ShootDirection * TraceDistance;//Получили точку конца трассировки
+	// Нарисовали линию трасировки, параметры метода 1.Указатель на мир 2.Точка старта прорисовки линии 3. Конечная точка 4. Цвет линии
+	//5. Будет линия прорисована постоянно или на короткое время 6. Время которое линию будет видно 7. Глубина 8. Толщина линии
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 1.0f, 0, 2.0f);
+
+	FHitResult HitResult;
+	//LineTraceSingleByChannel - вернет информацию о пересечении линии трассировки с самым первым объектом
+	//Параметры метода: 1. Информация о точке пересечения ( Структура FHitResult) 2. Начальная точка трейса 3. Конечная точка трейса
+	//4. Канал коллизии с которым работает наш канал трассировки, все остальные объекты будут игнорироваться
+	GetWorld()->LineTraceSingleByChannel(HitResult, TraceStart, TraceEnd, ECollisionChannel::ECC_Visibility);
+	if (HitResult.bBlockingHit)//Проверка на попадание
+	{
+		//Если попали, то прорисовываем сферическое пространство с помощью метода DrawDebugSphere
+		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 5.0f, 24, FColor::Red, false, 1.0f);
+	}
+}
+
+void ALMABaseWeapon::DecrementBullets() 
+{
+	CurrentAmmoWeapon.Bullets--;
+	
+	UE_LOG(LogWeapon, Display, TEXT("Bullets = %s"), *FString::FromInt(CurrentAmmoWeapon.Bullets));
+	if (IsCurrentClipEmpty())
+	{
+		ChangeClip();
+	}
+}
+
+bool ALMABaseWeapon::IsCurrentClipEmpty() const
+{
+	return CurrentAmmoWeapon.Bullets == 0;
 }
 
 // Called every frame

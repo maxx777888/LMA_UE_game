@@ -17,12 +17,18 @@ public:
 	// Sets default values for this component's properties
 	ULMAWeaponComponent();
 
+	void Fire();
+	void Reload();
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 	TSubclassOf<ALMABaseWeapon> WeaponClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Weapon")
+	UAnimMontage* ReloadMontage;
 
 
 public:	
@@ -34,5 +40,12 @@ private:
 	ALMABaseWeapon* Weapon = nullptr;
 
 	void SpawnWeapon();//Метод добавляет оружие персонажу
+	bool AnimReloading = false;
+
+	void InitAnimNotify();
+	//Функция проверяет, что проигрываемая анимация перезарядки уже закончилась
+	//Если закончилась, возвращает AnimReloading = false
+	void OnNotifyReloadFinished(USkeletalMeshComponent* SkeletalMesh);
+	bool CanReload() const;
 		
 };

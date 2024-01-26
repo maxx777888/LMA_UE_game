@@ -101,6 +101,8 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAction("SprintRun", IE_Pressed, this, &ALMADefaultCharacter::SprintRun);
 	PlayerInputComponent->BindAction("SprintRun", IE_Released, this, &ALMADefaultCharacter::SprintStop);
 
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::Fire);
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::Reload);
 
 }
 
@@ -167,14 +169,16 @@ void ALMADefaultCharacter::CameraZoomInOut(float Value)
 //----------- Методы работы Спринта ----------------
 void ALMADefaultCharacter::SprintRun() 
 {
-	IsSprint = true;
-	GetCharacterMovement()->MaxWalkSpeed = 700.0f;
-	GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
-	
+	if (GetVelocity().Length() >= 10.f)
+	{
+		IsSprint = true;
+		GetCharacterMovement()->MaxWalkSpeed = 700.0f;
+		GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
+	}
 }
 
 void ALMADefaultCharacter::SprintStop() 
-{
+{	
 	IsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300.0f;
