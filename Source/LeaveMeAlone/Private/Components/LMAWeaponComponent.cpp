@@ -54,7 +54,7 @@ void ULMAWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 }
 
-void ULMAWeaponComponent::SpawnWeapon() 
+void ULMAWeaponComponent::SpawnWeapon() //Добавляем оружие персонажу на сцене
 {
 	Weapon = GetWorld()->SpawnActor<ALMABaseWeapon>(WeaponClass);//Создаем оружие на сцене
 	if (Weapon)
