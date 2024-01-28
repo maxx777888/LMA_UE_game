@@ -56,6 +56,7 @@ void ALMABaseWeapon::Shoot()
 		//Если попали, то прорисовываем сферическое пространство с помощью метода DrawDebugSphere
 		DrawDebugSphere(GetWorld(), HitResult.ImpactPoint, 5.0f, 24, FColor::Red, false, 1.0f);
 	}
+	DecrementBullets();
 }
 
 void ALMABaseWeapon::DecrementBullets() 
@@ -63,6 +64,7 @@ void ALMABaseWeapon::DecrementBullets()
 	CurrentAmmoWeapon.Bullets--;
 	
 	UE_LOG(LogWeapon, Display, TEXT("Bullets = %s"), *FString::FromInt(CurrentAmmoWeapon.Bullets));
+
 	if (IsCurrentClipEmpty())
 	{
 		ChangeClip();

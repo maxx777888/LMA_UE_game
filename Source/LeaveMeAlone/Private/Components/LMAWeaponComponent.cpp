@@ -27,13 +27,16 @@ void ULMAWeaponComponent::Fire()
 
 void ULMAWeaponComponent::Reload() 
 {
+	
 
 	if (!CanReload()) return;//Проверка можем ли мы перезарядить оружие
-
+	ACharacter* Character = Cast<ACharacter>(GetOwner()); // Кастуемся к главному персонажу
+	if (Character->GetVelocity().Length() >= 300.f) return; //Если персонаж бежит спринт, то отмена перезарядки
+	Character->PlayAnimMontage(ReloadMontage);			  // Запуск анимации перезарядки
+	
 	Weapon->ChangeClip();//Обновляем кол-во патронов
 	AnimReloading = true;//Устанавливаем флаг, что идет перезарядка
-	ACharacter* Character = Cast<ACharacter>(GetOwner());//Кастуемся к главному персонажу
-	Character->PlayAnimMontage(ReloadMontage);//Запуск анимации перезарядки
+	
 }
 
 
