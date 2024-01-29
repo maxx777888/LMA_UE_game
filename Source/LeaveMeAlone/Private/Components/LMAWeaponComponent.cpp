@@ -20,23 +20,28 @@ void ULMAWeaponComponent::Fire()
 {
 	if (Weapon && !AnimReloading)
 	{
-		Weapon->Fire();
-		
+		Weapon->Fire();	
 	}
 }
 
-void ULMAWeaponComponent::Reload() 
+void ULMAWeaponComponent::StopFire() 
 {
-	
+	if (Weapon)
+	{
+		Weapon->StopFire();
+	}
+}
 
-	if (!CanReload()) return;//Проверка можем ли мы перезарядить оружие
+
+
+void ULMAWeaponComponent::ReloadNeeded() 
+{
+	if (!CanReload()) return;// Проверка можем ли мы перезарядить оружие
 	ACharacter* Character = Cast<ACharacter>(GetOwner()); // Кастуемся к главному персонажу
-	if (Character->GetVelocity().Length() >= 300.f) return; //Если персонаж бежит спринт, то отмена перезарядки
-	Character->PlayAnimMontage(ReloadMontage);			  // Запуск анимации перезарядки
-	
-	Weapon->ChangeClip();//Обновляем кол-во патронов
-	AnimReloading = true;//Устанавливаем флаг, что идет перезарядка
-	
+	if (Character->GetVelocity().Length() >= 300.f) return; // Если персонаж бежит спринт, то отмена перезарядки
+	Character->PlayAnimMontage(ReloadMontage); // Запуск анимации перезарядки
+	Weapon->ChangeClip();// Обновляем кол-во патронов
+	AnimReloading = true;// Устанавливаем флаг, что идет перезарядка
 }
 
 
@@ -46,6 +51,8 @@ void ULMAWeaponComponent::BeginPlay()
 	Super::BeginPlay();
 
 	SpawnWeapon();//Добавляем оружие в начале игры
+	Weapon->noBullets.AddUObject(this, &ULMAWeaponComponent::ReloadNeeded);
+
 	InitAnimNotify();
 }
 
@@ -106,6 +113,13 @@ void ULMAWeaponComponent::OnNotifyReloadFinished(USkeletalMeshComponent* Skeleta
 
 bool ULMAWeaponComponent::CanReload() const
 {
-	return !AnimReloading;
+	if (!Weapon->isClipFull()) 
+	{
+		return !AnimReloading;
+	}
+	else
+	{
+		return false;
+	}
 }
 

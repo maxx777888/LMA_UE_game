@@ -8,6 +8,8 @@
 
 class ALMABaseWeapon;
 
+
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LEAVEMEALONE_API ULMAWeaponComponent : public UActorComponent
 {
@@ -18,7 +20,10 @@ public:
 	ULMAWeaponComponent();
 
 	void Fire();
-	void Reload();
+	void StopFire();
+	/*void Reload();*/
+
+	void ReloadNeeded();
 
 protected:
 	// Called when the game starts

@@ -19,20 +19,48 @@ ALMABaseWeapon::ALMABaseWeapon()
 
 void ALMABaseWeapon::Fire() 
 {
-	Shoot();
-	
+	if (IsCurrentClipEmpty())
+	{
+		return;
+	}
+	else
+	{
+		// Запуск таймера для стрельбы
+		GetWorldTimerManager().SetTimer(FireTimerHandle, this, &ALMABaseWeapon::Shoot, FireTimer, true);
+	}
+		
+}
+
+void ALMABaseWeapon::StopFire()
+{
+	GetWorldTimerManager().ClearTimer(FireTimerHandle);
 }
 
 void ALMABaseWeapon::ChangeClip() 
 {
-	CurrentAmmoWeapon.Bullets = AmmoWeapon.Bullets;
+	if (!isClipFull())
+	{
+		CurrentAmmoWeapon.Bullets = AmmoWeapon.Bullets;
+	}
+}
+
+bool ALMABaseWeapon::isClipFull()
+{
+	if (CurrentAmmoWeapon.Bullets == AmmoWeapon.Bullets)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 // Called when the game starts or when spawned
 void ALMABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	CurrentAmmoWeapon.Bullets = AmmoWeapon.Bullets;//Заполняем патронами магазин в начале игры
 }
 
 void ALMABaseWeapon::Shoot() 
@@ -65,9 +93,10 @@ void ALMABaseWeapon::DecrementBullets()
 	
 	UE_LOG(LogWeapon, Display, TEXT("Bullets = %s"), *FString::FromInt(CurrentAmmoWeapon.Bullets));
 
-	if (IsCurrentClipEmpty())
+	if (IsCurrentClipEmpty())//Если обойма магазина патронов пустая, останавливаем таймер стрельбы
 	{
-		ChangeClip();
+		StopFire();
+		noBullets.Broadcast();
 	}
 }
 

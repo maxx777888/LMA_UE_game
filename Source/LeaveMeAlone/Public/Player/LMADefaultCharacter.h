@@ -84,17 +84,26 @@ private:
 	
 	// Настройки спринта
 	void SprintRun();
-	void SprintStop();
+	void StopSprint();
+
+	UPROPERTY(EditAnywhere)
+	float SprintCount = 0.1f;
+
+	UPROPERTY(EditAnywhere)
+	float StaminaCount = 0.1f;
 	void DecreaseStamina();
 	void IncreaseStamina();
+
+	FTimerHandle SprintTimer;
+	FTimerHandle StaminaTimer;
 
 	
 	const float MaxStamina = 100.f;
 	const float MinStamina = 0.f;
 
 	float Stamina = MaxStamina;
-	float WasteStamina = 0.50f;
-	float AccumulationStamina = 0.10f;
+	float WasteStamina = 5.f;
+	float AccumulationStamina = 3.f;
 
 	
 	

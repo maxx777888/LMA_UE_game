@@ -4,9 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "TimerManager.h"
 #include "LMABaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+
+// Делегат который будет сообщать что патроны в магазине закончились
+DECLARE_MULTICAST_DELEGATE(FOnNoBullets) 
 
 USTRUCT(BlueprintType)
 struct FAmmoWeapon
@@ -32,7 +36,11 @@ public:
 	ALMABaseWeapon();
 
 	void Fire();
+	void StopFire();
 	void ChangeClip();
+	bool isClipFull();
+
+	FOnNoBullets noBullets;
 
 protected:
 	// Called when the game starts or when spawned
@@ -46,6 +54,11 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
 	FAmmoWeapon AmmoWeapon{29, 0, true}; //Структура обоймы, патроны, обоймы, режим бесконечные обоймы
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	float FireTimer = 0.10f;
+
+	FTimerHandle FireTimerHandle;
 
 	void Shoot();
 	void DecrementBullets();

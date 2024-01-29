@@ -71,21 +71,6 @@ void ALMADefaultCharacter::Tick(float DeltaTime)
 	{
 		RotationPlayerOnCursor();//Метод для управления курсором мышки
 	}
-
-	//Настройки спринта и выносливости
-	if (IsSprint == true && Stamina != MinStamina)
-	{
-		DecreaseStamina();
-	}
-	else if (IsSprint == false && Stamina != MaxStamina)
-	{
-		IncreaseStamina();
-	}
-	if (FMath::IsNearlyZero(Stamina))
-	{
-		SprintStop();
-	}
-
 }
 
 // Called to bind functionality to input
@@ -99,10 +84,12 @@ void ALMADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 	PlayerInputComponent->BindAxis("CameraZoomInOut", this, &ALMADefaultCharacter::CameraZoomInOut);
 
 	PlayerInputComponent->BindAction("SprintRun", IE_Pressed, this, &ALMADefaultCharacter::SprintRun);
-	PlayerInputComponent->BindAction("SprintRun", IE_Released, this, &ALMADefaultCharacter::SprintStop);
+	PlayerInputComponent->BindAction("SprintRun", IE_Released, this, &ALMADefaultCharacter::StopSprint);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::Fire);
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::Reload);
+	PlayerInputComponent->BindAction("Fire", IE_Released, WeaponComponent, &ULMAWeaponComponent::StopFire);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, WeaponComponent, &ULMAWeaponComponent::ReloadNeeded);
 
 }
 
@@ -171,14 +158,26 @@ void ALMADefaultCharacter::SprintRun()
 {
 	if (GetVelocity().Length() >= 10.f)
 	{
+		GetWorldTimerManager().SetTimer(SprintTimer, this, &ALMADefaultCharacter::DecreaseStamina, SprintCount, true);
+		if (GetWorldTimerManager().IsTimerActive(StaminaTimer)) GetWorldTimerManager().ClearTimer(StaminaTimer);
+		
 		IsSprint = true;
 		GetCharacterMovement()->MaxWalkSpeed = 700.0f;
 		GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
 	}
 }
 
-void ALMADefaultCharacter::SprintStop() 
+void ALMADefaultCharacter::StopSprint()
 {	
+	if (GetWorldTimerManager().IsTimerActive(SprintTimer))
+	{
+		GetWorldTimerManager().ClearTimer(SprintTimer);
+
+		if (Stamina < MaxStamina)
+		{
+			GetWorldTimerManager().SetTimer(StaminaTimer, this, &ALMADefaultCharacter::IncreaseStamina, StaminaCount, true);
+		}
+	}
 	IsSprint = false;
 	GetCharacterMovement()->MaxWalkSpeed = 300.0f;
 	GetCharacterMovement()->MaxWalkSpeedCrouched = 300.0f;
@@ -188,6 +187,10 @@ void ALMADefaultCharacter::DecreaseStamina()
 {
 	
 	Stamina = FMath::Clamp(Stamina - WasteStamina, MinStamina, MaxStamina);
+	if (FMath::IsNearlyZero(Stamina))
+	{
+		StopSprint();
+	}
 	GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::White, FString::Printf(TEXT("Decrease Stamina = %f"), Stamina));
 	
 }
@@ -197,6 +200,13 @@ void ALMADefaultCharacter::IncreaseStamina()
 	if (IsSprint == false)
 	{
 		Stamina = FMath::Clamp(Stamina + AccumulationStamina, MinStamina, MaxStamina);
+		if (Stamina == MaxStamina)
+		{
+			if (GetWorldTimerManager().IsTimerActive(StaminaTimer))
+			{
+				GetWorldTimerManager().ClearTimer(StaminaTimer);
+			}			
+		}
 		GEngine->AddOnScreenDebugMessage(-1, 2.0f, FColor::Green, FString::Printf(TEXT("Increase Stamina = %f"), Stamina));	
 	}	
 }
