@@ -2,6 +2,7 @@
 
 
 #include "Components/LMAWeaponComponent.h"
+#include "Player/LMADefaultCharacter.h"
 #include "Animations/LMAReloadFinishedAnimNotify.h"
 #include "GameFramework/Character.h"
 #include "Weapon/LMABaseWeapon.h"
@@ -18,10 +19,15 @@ ULMAWeaponComponent::ULMAWeaponComponent()
 
 void ULMAWeaponComponent::Fire() 
 {
-	if (Weapon && !AnimReloading)
+	auto Player = Cast<ALMADefaultCharacter>(GetOwner());
+	if (IsValid(Player))
 	{
-		Weapon->Fire();	
+		if (Weapon && !AnimReloading && Player->IsSprint==false)
+		{
+			Weapon->Fire();
+		}
 	}
+	
 }
 
 void ULMAWeaponComponent::StopFire() 
@@ -40,8 +46,20 @@ void ULMAWeaponComponent::ReloadNeeded()
 	ACharacter* Character = Cast<ACharacter>(GetOwner()); // Кастуемся к главному персонажу
 	if (Character->GetVelocity().Length() >= 300.f) return; // Если персонаж бежит спринт, то отмена перезарядки
 	Character->PlayAnimMontage(ReloadMontage); // Запуск анимации перезарядки
+	Weapon->StopFire();//Остановка и запрет стрельбы
 	Weapon->ChangeClip();// Обновляем кол-во патронов
 	AnimReloading = true;// Устанавливаем флаг, что идет перезарядка
+}
+
+bool ULMAWeaponComponent::GetCurrentWeaponAmmo(FAmmoWeapon& AmmoWeapon) const
+{
+	if (Weapon)
+	{
+		AmmoWeapon = Weapon->GetCurrentAmmoWeapon();
+		return true;
+	}
+
+	return false;
 }
 
 

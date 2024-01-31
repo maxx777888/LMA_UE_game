@@ -33,7 +33,10 @@ void ALMABaseWeapon::Fire()
 
 void ALMABaseWeapon::StopFire()
 {
-	GetWorldTimerManager().ClearTimer(FireTimerHandle);
+	if (GetWorldTimerManager().IsTimerActive(FireTimerHandle))
+	{
+		GetWorldTimerManager().ClearTimer(FireTimerHandle);
+	}	
 }
 
 void ALMABaseWeapon::ChangeClip() 

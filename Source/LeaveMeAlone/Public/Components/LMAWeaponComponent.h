@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+
 #include "LMAWeaponComponent.generated.h"
 
 class ALMABaseWeapon;
@@ -20,10 +21,14 @@ public:
 	ULMAWeaponComponent();
 
 	void Fire();
+
+	UFUNCTION(BlueprintCallable)
 	void StopFire();
-	/*void Reload();*/
 
 	void ReloadNeeded();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetCurrentWeaponAmmo(FAmmoWeapon& AmmoWeapon) const;
 
 protected:
 	// Called when the game starts
@@ -51,5 +56,5 @@ private:
 	//Если закончилась, возвращает AnimReloading = false
 	void OnNotifyReloadFinished(USkeletalMeshComponent* SkeletalMesh);
 	bool CanReload() const;
-		
+	
 };

@@ -59,7 +59,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool IsSprint = false;//ѕеременна€ дл€ сохранени€ состо€ни€ спринта
+	bool IsSprint;//ѕеременна€ дл€ сохранени€ состо€ни€ спринта
 
 private:
 	float YRotation = -75.0f;

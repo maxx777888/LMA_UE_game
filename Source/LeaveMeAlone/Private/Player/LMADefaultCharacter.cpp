@@ -156,7 +156,7 @@ void ALMADefaultCharacter::CameraZoomInOut(float Value)
 //----------- Методы работы Спринта ----------------
 void ALMADefaultCharacter::SprintRun() 
 {
-	if (GetVelocity().Length() >= 10.f)
+	if (GetVelocity().Length() >= 1.f)
 	{
 		GetWorldTimerManager().SetTimer(SprintTimer, this, &ALMADefaultCharacter::DecreaseStamina, SprintCount, true);
 		if (GetWorldTimerManager().IsTimerActive(StaminaTimer)) GetWorldTimerManager().ClearTimer(StaminaTimer);
@@ -165,6 +165,7 @@ void ALMADefaultCharacter::SprintRun()
 		GetCharacterMovement()->MaxWalkSpeed = 700.0f;
 		GetCharacterMovement()->MaxWalkSpeedCrouched = 700.0f;
 	}
+	
 }
 
 void ALMADefaultCharacter::StopSprint()
