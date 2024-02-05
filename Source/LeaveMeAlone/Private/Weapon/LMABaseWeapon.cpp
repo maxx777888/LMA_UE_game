@@ -4,7 +4,7 @@
 #include "Weapon/LMABaseWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
 
-DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All);//лог будет отображать количество боеприпасов
+//DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All);//лог будет отображать количество боеприпасов
 
 // Sets default values
 ALMABaseWeapon::ALMABaseWeapon()
@@ -94,7 +94,7 @@ void ALMABaseWeapon::DecrementBullets()
 {
 	CurrentAmmoWeapon.Bullets--;
 	
-	UE_LOG(LogWeapon, Display, TEXT("Bullets = %s"), *FString::FromInt(CurrentAmmoWeapon.Bullets));
+	//UE_LOG(LogWeapon, Display, TEXT("Bullets = %s"), *FString::FromInt(CurrentAmmoWeapon.Bullets));
 
 	if (IsCurrentClipEmpty())//≈сли обойма магазина патронов пуста€, останавливаем таймер стрельбы
 	{
