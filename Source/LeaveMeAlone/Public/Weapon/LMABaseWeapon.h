@@ -8,6 +8,7 @@
 #include "LMABaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
+class USoundWave;
 
 // Делегат который будет сообщать что патроны в магазине закончились
 DECLARE_MULTICAST_DELEGATE(FOnNoBullets) 
@@ -43,6 +44,10 @@ public:
 	FOnNoBullets noBullets;
 
 	FAmmoWeapon GetCurrentAmmoWeapon() const { return CurrentAmmoWeapon; }
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
+	USoundWave* ShootWave;
+
 
 protected:
 	// Called when the game starts or when spawned

@@ -3,6 +3,7 @@
 
 #include "Weapon/LMABaseWeapon.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 //DEFINE_LOG_CATEGORY_STATIC(LogWeapon, All, All);//лог будет отображать количество боеприпасов
 
@@ -75,8 +76,8 @@ void ALMABaseWeapon::Shoot()
 	const FVector TraceEnd = TraceStart + ShootDirection * TraceDistance;//Получили точку конца трассировки
 	// Нарисовали линию трасировки, параметры метода 1.Указатель на мир 2.Точка старта прорисовки линии 3. Конечная точка 4. Цвет линии
 	//5. Будет линия прорисована постоянно или на короткое время 6. Время которое линию будет видно 7. Глубина 8. Толщина линии
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 1.0f, 0, 2.0f);
-
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, FColor::Black, false, 1.0f, 0, 2.0f);//Рисует траекторию выстрела
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ShootWave, TraceStart);//Проигрывает звуки выстрела
 	FHitResult HitResult;
 	//LineTraceSingleByChannel - вернет информацию о пересечении линии трассировки с самым первым объектом
 	//Параметры метода: 1. Информация о точке пересечения ( Структура FHitResult) 2. Начальная точка трейса 3. Конечная точка трейса
