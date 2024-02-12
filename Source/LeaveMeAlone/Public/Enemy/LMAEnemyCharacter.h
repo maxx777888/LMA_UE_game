@@ -8,6 +8,7 @@
 #include "LMAEnemyCharacter.generated.h"
 
 class ULMAHealthComponent;
+class UBehaviorTree;
 
 UCLASS()
 class LEAVEMEALONE_API ALMAEnemyCharacter : public ACharacter
@@ -20,6 +21,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	ULMAHealthComponent* HealthComponent;//Компонент здоровья
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
+	UBehaviorTree* BehaviorTreeAsset;//Дерево действий 
 
 protected:
 	// Called when the game starts or when spawned
