@@ -21,6 +21,9 @@ public:
 	UFUNCTION()
 	ULMAHealthComponent* GetHealthComponent() const { return HealthComponent; } //Геттер для получения компонента здоровья
 
+	UFUNCTION(BlueprintCallable)
+	float GetStamina() const { return Stamina; } // Возвращает текущее состояние стамины
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	USpringArmComponent* SpringArmComponent;
